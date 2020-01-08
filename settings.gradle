@@ -1,0 +1,2 @@
+include ':app', ':garbageapi'
+rootProject.name='skyautonet_garbage_android'
