@@ -1,21 +1,28 @@
 package com.skyautonet.garbage
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
+import android.view.KeyEvent
 import android.view.View
 import android.webkit.*
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val URL = "http://stg.webscan-fleet.com/garbage/index.html"
-//    private val URL = "https://www.sky-net.co.kr/garbage/index.html"
-    private var isAlreadyCreated = false
+//    private val URL = "http://stg.webscan-fleet.com/garbage/index.html"
+    private val URL = "https://www.sky-net.co.kr/garbage/index.html"
+    var isAlreadyCreated = false
+    var mFlag = false
+    private var mHandler = Handler()
+    var lastTimebackPreesed : Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +65,25 @@ class MainActivity : AppCompatActivity() {
         if(isAlreadyCreated && !isNetworkAvailable()){
             isAlreadyCreated = false
         }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+
+        val originalUrl = "https://www.sky-net.co.kr/garbage/index.html#/login"
+        if((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack() && webView.originalUrl != originalUrl){
+            webView.goBack()
+            return true
+        }else{
+            AlertDialog.Builder(this)
+                .setTitle("프로그램 종료")
+                .setMessage("프로그램을 종료하시겠습니까?")
+                .setPositiveButton("예") { _, _ ->
+                    android.os.Process.killProcess(android.os.Process.myPid())
+                }
+                .setNegativeButton("아니오", null).show()
+
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     private fun isNetworkAvailable() : Boolean{
