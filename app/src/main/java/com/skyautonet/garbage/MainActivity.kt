@@ -17,12 +17,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-//    private val URL = "http://stg.webscan-fleet.com/garbage/index.html"
-    private val URL = "https://www.sky-net.co.kr/garbage/index.html"
+    private val URL = "http://stg.webscan-fleet.com/garbage/index.html"
+//    private val URL = "https://www.sky-net.co.kr/garbage/index.html"
     var isAlreadyCreated = false
-    var mFlag = false
-    private var mHandler = Handler()
-    var lastTimebackPreesed : Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +41,8 @@ class MainActivity : AppCompatActivity() {
 
         webView.webViewClient = object : WebViewClient(){
             override fun onPageFinished(view: WebView?, url: String?) {
+                webView.clearHistory()
+                webView.clearCache(true)
                 super.onPageFinished(view, url)
             }
 
